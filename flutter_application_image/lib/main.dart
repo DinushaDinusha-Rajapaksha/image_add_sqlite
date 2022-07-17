@@ -6,6 +6,9 @@ import 'package:flutter_application_image/model/Utility.dart';
 import 'package:flutter_application_image/db/DBHelper.dart';
 import 'package:flutter_application_image/model/photo.dart';
 
+void main() async {
+  runApp(const SaveImageDemoSQLlite());
+}
 class SaveImageDemoSQLlite extends StatefulWidget {
   const SaveImageDemoSQLlite({Key? key}) : super(key: key);
 
@@ -15,7 +18,9 @@ class SaveImageDemoSQLlite extends StatefulWidget {
    _SaveImageDemoSQLliteState createState() => _SaveImageDemoSQLliteState();
 }
 
-class _SaveImageDemoSQLliteState   extends State<SaveImageDemoSQLlite> {
+
+
+class _SaveImageDemoSQLliteState extends State<SaveImageDemoSQLlite> {
 late Future<File> imageFile;
   late Image image;
   late DBHelper dbHelper;
@@ -39,8 +44,10 @@ late Future<File> imageFile;
   }
 
    pickImageFromGallery() {
-    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) {
-      String imgString = Utility.base64String(imgFile.readAsBytesSync());
+    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) async {
+      // String imgString = Utility.base64String(imgFile.readAsBytesSync());
+
+      String imgString = Utility.base64String(await imgFile!.readAsBytes());
       photo photo1 = photo(0, imgString, id: null, photoName: '');
       dbHelper.save(photo1);
       refreshImages();
@@ -55,7 +62,7 @@ late Future<File> imageFile;
           mainAxisSpacing: 4.0,
           crossAxisSpacing: 4.0,
           children: images.map((photo) {
-          return Utility.imageFromBase64String(photo.photoName);
+          return Utility.imageFromBase64String(photo.photoName ?? "");
         }).toList(),
           ),
         );
@@ -67,7 +74,7 @@ late Future<File> imageFile;
     var widget;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("Flutter save Image in SQLlite"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),

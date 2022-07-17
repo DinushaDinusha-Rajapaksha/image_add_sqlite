@@ -23,7 +23,7 @@ class DBHelper{
   }
 
   initDB() async{
-    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_Name);
     var db = await openDatabase(path, version: 1, onCreate: _onCreate);
     return db;
@@ -44,9 +44,9 @@ class DBHelper{
      var dbClient = await db;
      List<Map> maps = await dbClient!.query(TABLE, columns: [ID, NAME]);
      List<photo> photos = [];
-     if(maps.length > 0){
+     if(maps.isNotEmpty){
       for(int i = 0; i < maps.length; i++){
-        photos.add(photo.fromMap(maps[i]));
+        photos.add(photo.fromMap(Map<String, dynamic>.from(maps[i])));
       }
      }
      return photos;
