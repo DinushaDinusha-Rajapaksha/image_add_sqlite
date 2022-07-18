@@ -6,6 +6,10 @@ import 'package:flutter_application_image/model/Utility.dart';
 import 'package:flutter_application_image/db/DBHelper.dart';
 import 'package:flutter_application_image/model/photo.dart';
 
+void main() async {
+  runApp(const SaveImageDemoSQLlite());
+}
+
 class SaveImageDemoSQLlite extends StatefulWidget {
   const SaveImageDemoSQLlite({Key? key}) : super(key: key);
 
@@ -38,14 +42,19 @@ late Future<File> imageFile;
     });
   }
 
+  
    pickImageFromGallery() {
-    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) {
-      String imgString = Utility.base64String(imgFile.readAsBytesSync());
+    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) async {
+      // String imgString = Utility.base64String(imgFile.readAsBytesSync());
+
+      String imgString = Utility.base64String(await imgFile!.readAsBytes());
       photo photo1 = photo(0, imgString, id: null, photoName: '');
       dbHelper.save(photo1);
       refreshImages();
     });
   }
+    
+
     gridView(){
       return Padding(
         padding: EdgeInsets.all(5.0),
@@ -55,19 +64,23 @@ late Future<File> imageFile;
           mainAxisSpacing: 4.0,
           crossAxisSpacing: 4.0,
           children: images.map((photo) {
-          return Utility.imageFromBase64String(photo.photoName);
+          return Utility.imageFromBase64String(photo.photoName ?? "");
         }).toList(),
           ),
         );
     }
+
   
 // This widget is the root of your application.
+
+
+
   @override
   Widget build(BuildContext context) {
-    var widget;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return MaterialApp(
+      home: Scaffold(
+        appBar:AppBar(
+        title: Text("Gallery"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -77,7 +90,7 @@ late Future<File> imageFile;
           )
             ],
         ),
-      body: Center(
+        body: Center(
         child:Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -87,7 +100,16 @@ late Future<File> imageFile;
           ],
           ) ,
           ),
+         ),
+     theme: ThemeData(
+       
+        primarySwatch: Colors.teal,
+      ),
       
     );
   }
 }
+
+
+
+
