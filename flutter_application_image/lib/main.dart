@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -5,6 +7,7 @@ import 'dart:async';
 import 'package:flutter_application_image/model/Utility.dart';
 import 'package:flutter_application_image/db/DBHelper.dart';
 import 'package:flutter_application_image/model/photo.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   runApp(const SaveImageDemoSQLlite());
@@ -43,17 +46,56 @@ late Future<File> imageFile;
   }
 
   
-   pickImageFromGallery() {
-    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) async {
-      // String imgString = Utility.base64String(imgFile.readAsBytesSync());
 
-      String imgString = Utility.base64String(await imgFile!.readAsBytes());
+  
+  pickImageFromGallery() {
+    
+    ImagePicker().pickImage(source: ImageSource.gallery).then((imgFile) async {
+      print("here");
+      // String imgString = Utility.base64String(imgFile.readAsBytesSync());
+      //final file = File(imgFile!.path);
+
+    String imgString = Utility.base64String(await imgFile!.readAsBytes());
+      //String imgString = Utility.base64String(file.readAsBytesSync());
       photo photo1 = photo(0, imgString, id: null, photoName: '');
       dbHelper.save(photo1);
       refreshImages();
     });
   }
-    
+  
+
+  
+
+  /*Future<File?> captureAndSaveImage() async {
+
+final pickedImage = await ImagePicker().getImage(source: 
+ImageSource.camera);
+if (pickedImage == null) return null;
+try {
+final directory = await getExternalStorageDirectory();
+if (directory != null) return 
+File(pickedImage.path).copy('${directory.path}/name.png');
+ } catch (e) {
+return null;
+ }
+}
+*/
+
+/*Future<String?> convertImgToBase64() async {
+    try {
+      var imgFile;
+      print("hello");
+      File img = File(imgFile!.path);
+      final splitted = imgFile!.path.split('.');
+      final ext = splitted.last;
+      final response = await img.readAsBytes();
+      return "data:image/$ext;base64,${base64Encode(response)}";
+    } catch (e) {
+      //print(e.toString());
+      return null;
+    }
+  }
+  */
 
     gridView(){
       return Padding(
@@ -84,8 +126,10 @@ late Future<File> imageFile;
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () {
-              pickImageFromGallery();
+            onPressed: () async {
+            pickImageFromGallery();
+             // File? file = await captureAndSaveImage();
+             //convertImgToBase64();
             },
           )
             ],

@@ -48,11 +48,13 @@ class DBHelper{
      var dbClient = await db;
      List<Map> maps = await dbClient!.query(TABLE, columns: [ID, NAME]);
      List<photo> photos = [];
+     
      if(maps.isNotEmpty){
       for(int i = 0; i < maps.length; i++){
         photos.add(photo.fromMap(Map<String, dynamic>.from(maps[i])));
       }
      }
+     print("photos {{$photos}}");
      return photos;
   }
 
