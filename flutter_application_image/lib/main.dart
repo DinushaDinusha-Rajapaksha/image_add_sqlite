@@ -57,7 +57,9 @@ late Future<File> imageFile;
 
     String imgString = Utility.base64String(await imgFile!.readAsBytes());
       //String imgString = Utility.base64String(file.readAsBytesSync());
-      photo photo1 = photo(0, imgString, id: null, photoName: '');
+      print(imgString);
+
+      photo photo1 = photo(0, imgString);
       dbHelper.save(photo1);
       refreshImages();
     });
@@ -106,6 +108,8 @@ return null;
           mainAxisSpacing: 4.0,
           crossAxisSpacing: 4.0,
           children: images.map((photo) {
+            print("photo name");
+            print(photo.photoName);
           return Utility.imageFromBase64String(photo.photoName ?? "");
         }).toList(),
           ),

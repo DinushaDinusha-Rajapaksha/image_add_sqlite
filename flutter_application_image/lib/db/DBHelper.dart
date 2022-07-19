@@ -37,7 +37,10 @@ class DBHelper{
 
   Future<photo> save(photo photo) async {
     var dbClient = await db;
+    print(photo.photoName);
     photo.id = await dbClient!.insert(TABLE, photo.toMap());
+    print(photo.id);
+
     return photo;
   
   }

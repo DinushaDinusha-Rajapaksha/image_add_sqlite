@@ -1,8 +1,10 @@
 class photo {
-  late int? id;
-  late String? photoName;
+  late int? id = 0;
+  late String? photoName = "";
 
-  photo(int i, String imgString, { required this.id ,  required this.photoName});
+  photo(int i, String imgString){
+    this.photoName = imgString;
+  }
 
   Map <String, dynamic> toMap(){
 
